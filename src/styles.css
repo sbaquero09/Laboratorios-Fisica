@@ -1,0 +1,2357 @@
+/* Piel del laboratorio (maqueta D3 v3-B, panel lateral). Todo valor sale de los tokens de
+   tokens.css: nada de colores, tamaños ni espacios sueltos. */
+
+/* Fuentes autoalojadas (OFL, licencias junto a los archivos). Plex lleva los dígitos de ancho fijo.
+   Literata se parte en latín y griego con unicode-range: cada archivo se pide solo si hace falta. */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/plex-sans-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/plex-sans-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Literata';
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url('/fonts/literata-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Literata';
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+  src: url('/fonts/literata-greek.woff2') format('woff2');
+}
+
+/* ---------- Base ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 var(--text-body) / 1.5 var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+dt,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--font-serif);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--text-3);
+  font-weight: 600;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sym {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.unit {
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.ic {
+  width: var(--icon);
+  height: var(--icon);
+  flex: none;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+}
+
+/* Foco de teclado: anillo del color de foco (naranja, distinto del azul de los botones). */
+:focus-visible {
+  outline: var(--ring) solid var(--focus);
+  outline-offset: var(--ring-gap);
+}
+
+/* Destinos de foco programático (tabindex="-1"): no son controles operables por Tab. Sin anillo
+   cuando el foco lo movió el programa; si el niño llegó con el teclado (focus-visible), sí se ve. */
+.focus-target:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Control o resultado que un paso del experimento pide mirar: forma y fondo, no solo color. */
+.hl {
+  outline: var(--bold) solid var(--accent);
+  outline-offset: var(--s1);
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  min-height: var(--control);
+  padding: 0 var(--s5);
+  font: 600 var(--text-body) / 1 var(--font-sans);
+  border-radius: var(--r-md);
+  border: var(--hair) solid var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    transform var(--t-press) var(--ease);
+}
+
+/* Solo con ratón: en pantallas táctiles :hover se queda pegado tras el toque. */
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+}
+
+.btn:active {
+  background: var(--accent-active);
+}
+
+.btn.sec {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn.sec:hover {
+    background: var(--paper-sunken);
+  }
+}
+
+.btn.sec[aria-expanded='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 var(--hair) var(--accent);
+}
+
+.btn.play {
+  min-height: var(--play-h);
+  min-width: 9.5rem;
+  font-size: var(--text-lead);
+}
+
+/* Deshabilitado con aria-disabled (conserva el foco y se anuncia), sin opacity: baja el contraste. */
+.btn[aria-disabled='true'] {
+  background: var(--paper-sunken);
+  border-color: var(--line);
+  color: var(--ink-faint);
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn[aria-disabled='true']:hover {
+    background: var(--paper-sunken);
+    border-color: var(--line);
+    color: var(--ink-faint);
+    cursor: not-allowed;
+  }
+}
+
+/* ---------- Selectores segmentados (radios nativos con estilo) ---------- */
+.segs {
+  display: inline-flex;
+}
+
+.seg {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.seg input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.seg span {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  flex: 1;
+  min-height: var(--control);
+  padding: 0 var(--s4);
+  border: var(--hair) solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 var(--text-body) / 1.2 var(--font-sans);
+  text-align: center;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    transform var(--t-press) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .seg:hover span {
+    background: var(--paper-sunken);
+  }
+}
+
+.seg + .seg span {
+  margin-left: calc(-1 * var(--hair));
+}
+
+.seg:first-child span {
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+
+.seg:last-child span {
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+
+.seg input:checked + span {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 var(--hair) var(--accent);
+  font-weight: 600;
+  z-index: 1;
+}
+
+/* Marca de elegido: además del color. */
+.seg input:checked + span::before {
+  content: '';
+  flex: none;
+  width: 0.4em;
+  height: 0.75em;
+  border: solid currentColor;
+  border-width: 0 var(--bold) var(--bold) 0;
+  transform: rotate(45deg) translateY(-0.1em);
+}
+
+.seg input:focus-visible + span {
+  outline: var(--ring) solid var(--focus);
+  outline-offset: var(--ring-gap);
+  z-index: 2;
+}
+
+.modes .seg span {
+  font-size: var(--text-small);
+}
+
+.modes .seg input:checked + span {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  box-shadow: none;
+}
+
+.modes .seg input:checked + span::before {
+  display: none;
+}
+
+.choice {
+  display: flex;
+  width: 100%;
+}
+
+/* ---------- Deslizadores ---------- */
+.param {
+  min-width: 0;
+}
+
+.plabel {
+  display: block;
+  margin-bottom: var(--s1);
+  font: 600 var(--text-body) / 1.3 var(--font-sans);
+}
+
+.plabel .sym {
+  color: var(--ink-soft);
+}
+
+.prow {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.pval {
+  flex: none;
+  min-width: 4.6rem;
+  text-align: right;
+  font: 600 var(--text-lead) / 1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+.pval .unit {
+  font-size: var(--text-small);
+}
+
+.range {
+  --pct: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  height: var(--control);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--r-sm);
+}
+
+.range::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  height: var(--track);
+  border-radius: var(--r-sm);
+  border: var(--hair) solid var(--line-strong);
+  background: linear-gradient(90deg, var(--accent) var(--pct), var(--surface) var(--pct));
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc((var(--track) - var(--thumb)) / 2);
+  border-radius: var(--r-round);
+  background: var(--accent);
+  border: var(--ring) solid var(--surface);
+  box-shadow: 0 0 0 var(--hair) var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .range:hover::-webkit-slider-thumb {
+    background: var(--accent-hover);
+  }
+}
+
+.range::-moz-range-track {
+  height: var(--track);
+  border-radius: var(--r-sm);
+  border: var(--hair) solid var(--line-strong);
+  background: var(--surface);
+}
+
+.range::-moz-range-progress {
+  height: var(--track);
+  border-radius: var(--r-sm);
+  background: var(--accent);
+}
+
+.range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  border-radius: var(--r-round);
+  background: var(--accent);
+  border: var(--ring) solid var(--surface);
+  box-shadow: 0 0 0 var(--hair) var(--accent);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  margin-top: var(--s1);
+}
+
+.chip {
+  min-height: var(--control);
+  padding: 0 var(--s2);
+  font: 400 var(--text-small) / 1 var(--font-sans);
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--hair) solid var(--line-strong);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    transform var(--t-press) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    background: var(--paper-sunken);
+  }
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 var(--hair) var(--accent);
+  font-weight: 600;
+}
+
+.note {
+  font-size: var(--text-small);
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+/* ---------- Escenario: péndulo y gráfica ---------- */
+.stage,
+.chartbox {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  background: var(--surface);
+  border: var(--hair) solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+/* Cada canvas llena su caja: su tamaño real lo fija ResizeObserver desde el contenedor. */
+.stage > canvas,
+.chartbox > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -30%);
+  margin: 0;
+  padding: var(--s2) var(--s4);
+  /* Sin caja a la vista (D6: una pastilla sobre la gráfica pesaba de más): el fondo tapa las líneas de
+     la cuadrícula y el filete del mismo color hace que el borde caiga en píxeles enteros. */
+  background: var(--surface);
+  border: var(--hair) solid var(--surface);
+  font: 500 var(--text-lead) / 1.3 var(--font-serif);
+  color: var(--ink);
+  text-align: center;
+  pointer-events: none;
+  max-width: calc(100% - var(--s5));
+}
+
+/* Sin contexto 2D no hay canvas: una caja explicativa ocupa su lugar. Es información serena, no un
+   error (tono neutro), y sigue la misma caja del escenario. */
+.canvas-off {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  padding: var(--s5);
+  overflow-y: auto;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.canvas-off > * {
+  max-width: var(--w-notice);
+}
+
+.canvas-off-ic {
+  width: var(--swatch);
+  height: var(--swatch);
+  color: var(--ink-faint);
+}
+
+.canvas-off-title {
+  margin: 0;
+  font: 600 var(--text-lead) / 1.3 var(--font-serif);
+  color: var(--ink);
+}
+
+.canvas-off-text {
+  margin: 0;
+  font: 400 var(--text-body) / 1.45 var(--font-serif);
+}
+
+/* En el lugar de la gráfica solo cabe una línea con su ícono. */
+.canvas-off-chart {
+  flex-direction: row;
+  gap: var(--s3);
+}
+
+.canvas-off-chart .canvas-off-text {
+  font-size: var(--text-small);
+}
+
+/* ---------- Avisos ---------- */
+.notice {
+  display: flex;
+  gap: var(--s3);
+  align-items: flex-start;
+  width: 100%;
+  margin-top: var(--s3);
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r-md);
+  border: var(--hair) solid var(--warn-line);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  font-size: var(--text-small);
+  line-height: 1.45;
+  text-align: left;
+}
+
+.notice .ic {
+  margin-top: var(--s1);
+}
+
+.notice .nbody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s2);
+}
+
+.notice .btn {
+  padding: 0 var(--s4);
+  font-size: var(--text-small);
+}
+
+.alert {
+  display: flex;
+  gap: var(--s3);
+  align-items: flex-start;
+  margin-bottom: var(--s3);
+  padding: var(--s3) var(--s4);
+  background: var(--bad-bg);
+  border: var(--bold) solid var(--bad-line);
+  border-radius: var(--r-md);
+  color: var(--bad-text);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.alert .ic {
+  margin-top: var(--s1);
+}
+
+/* ---------- Interruptor ---------- */
+.switch {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  width: 100%;
+  min-height: var(--control);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font: 400 var(--text-body) / 1.3 var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--r-md);
+}
+
+.swtrack {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: var(--w-switch);
+  height: var(--control);
+  padding: 0 var(--s3);
+  border-radius: var(--r-md);
+  border: var(--hair) solid var(--line-strong);
+  background: var(--surface);
+  font: 600 var(--text-small) / 1 var(--font-sans);
+  color: var(--ink);
+  transition:
+    background-color var(--t-fast) var(--ease),
+    transform var(--t-press) var(--ease);
+}
+
+.swknob {
+  position: absolute;
+  left: var(--s1);
+  top: 50%;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc(var(--thumb) / -2);
+  border-radius: var(--r-sm);
+  background: var(--line-strong);
+  /* El pomo se mueve con transform (no con left): no toca el layout. */
+  transition:
+    transform var(--t-base) var(--ease),
+    background-color var(--t-fast) var(--ease);
+}
+
+.switch[aria-pressed='true'] .swtrack {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  justify-content: flex-start;
+}
+
+.switch[aria-pressed='true'] .swknob {
+  /* Lo que mide la pista por dentro (sin sus bordes) menos el pomo y el aire de los dos lados. */
+  transform: translateX(calc(var(--w-switch) - 2 * var(--hair) - var(--thumb) - 2 * var(--s1)));
+  background: var(--on-accent);
+}
+
+/* ---------- Cajón "Más opciones" ---------- */
+.drawer {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: inset var(--hair) 0 0 var(--line);
+}
+
+.drawer-in {
+  display: flex;
+  flex-direction: column;
+  width: var(--w-drawer);
+  height: 100%;
+}
+
+.drawer-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s3) var(--s5);
+  border-bottom: var(--hair) solid var(--line);
+}
+
+.drawer-head h2 {
+  font-size: var(--text-lead);
+  font-weight: 600;
+}
+
+.drawer-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 var(--s5) var(--s5);
+}
+
+.dsec {
+  padding: var(--s4) 0;
+  border-bottom: var(--hair) solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+.dsec:last-child {
+  border-bottom: 0;
+}
+
+.dsec h3 {
+  font: 600 var(--text-body) / 1.3 var(--font-sans);
+}
+
+.dsec .plabel {
+  margin-bottom: 0;
+}
+
+.curios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.curios > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--s3);
+  align-items: baseline;
+}
+
+.curios dt {
+  font-weight: 600;
+  font-size: var(--text-small);
+}
+
+.curios dd.v {
+  grid-row: 1;
+  grid-column: 2;
+  font: 600 var(--text-body) / 1.3 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.curios dd.v .unit {
+  font-size: var(--text-small);
+}
+
+.curios dd.d {
+  grid-column: 1 / -1;
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+  line-height: 1.4;
+}
+
+/* Cerrado: fuera del orden de foco y de lectura (el atributo inert lo refuerza). */
+.app[data-drawer='closed'] .drawer {
+  visibility: hidden;
+  transition: visibility 0s var(--t-base);
+}
+
+/* Escritorio: la columna del cajón cambia de golpe (animar columnas es layout y obliga a redibujar
+   los canvas en cada cuadro); lo que se anima es el fundido de su contenido al abrirse. Al cerrarse,
+   la columna ya no está, así que la salida es instantánea. */
+@media (min-width: 901px) {
+  .drawer-in {
+    opacity: 0;
+    transition: opacity var(--t-base) var(--ease);
+  }
+
+  .app[data-drawer='open'] .drawer-in {
+    opacity: 1;
+  }
+}
+
+/* ---------- Hoja de Teoría ---------- */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--scrim);
+  transition: opacity var(--t-enter) var(--ease);
+}
+
+.sheet {
+  position: fixed;
+  z-index: 60;
+  top: var(--s5);
+  bottom: var(--s5);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(var(--w-sheet), calc(100% - 2 * var(--s5)));
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: var(--hair) solid var(--line-strong);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  /* Entra con fundido y una subida corta (translate se suma al transform que la centra). */
+  transition:
+    opacity var(--t-enter) var(--ease),
+    translate var(--t-enter) var(--ease);
+}
+
+/* Sale por donde entró, más rápido: el niño ya decidió cerrarla y no debe esperar. */
+.scrim[data-state='closing'],
+.sheet[data-state='closing'] {
+  opacity: 0;
+  transition-duration: var(--t-fast);
+}
+
+.sheet[data-state='closing'] {
+  translate: 0 var(--lift-lg);
+}
+
+.sheet-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s4) var(--s5);
+  border-bottom: var(--hair) solid var(--line);
+}
+
+.sheet-head h2 {
+  font-size: var(--text-2);
+  font-weight: 600;
+}
+
+.sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--s2) var(--s5) var(--s6);
+  font-family: var(--font-serif);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* Desplazable con teclado: el anillo va por dentro del borde de la hoja para que no se recorte. */
+.sheet-body:focus-visible {
+  outline-offset: calc(-1 * var(--ring));
+}
+
+.sheet-body section {
+  padding: var(--s4) 0;
+  border-bottom: var(--hair) solid var(--line);
+  max-width: 68ch;
+}
+
+.sheet-body section:last-child {
+  border-bottom: 0;
+}
+
+.sheet-body h3 {
+  font: 600 var(--text-lead) / 1.25 var(--font-serif);
+  margin-bottom: var(--s2);
+}
+
+.sheet-body p {
+  margin: 0 0 var(--s2);
+}
+
+/* Ecuación: prosa y matemáticas en una línea que se parte entre fórmulas. Si una fórmula sola es
+   más ancha que la hoja (la serie en un celular), la caja se desplaza de lado (Formula le da Tab
+   y nombre solo en ese caso). El relleno vertical evita que el overflow recorte fracciones altas. */
+.sheet-body .eq {
+  font: 400 var(--text-lead) / 1.5 var(--font-serif);
+  margin: var(--s2) 0;
+  padding: var(--s1) 0;
+  color: var(--ink);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.sheet-body .eq:focus-visible {
+  outline-offset: calc(-1 * var(--ring));
+}
+
+.sheet-body .eq-hint {
+  font-size: var(--text-small);
+  margin-top: calc(-1 * var(--s1));
+}
+
+.sheet-body .eq-plain {
+  overflow-wrap: anywhere;
+}
+
+/* Cada <math> va en línea con fracciones de tamaño completo (math-style normal), no las compactas. */
+.sheet-body .eq math {
+  font-family: var(--font-math);
+  font-weight: 400;
+  math-style: normal;
+  line-height: 1.2;
+}
+
+.sheet-body .eq .eq-gap {
+  width: var(--s1);
+}
+
+.sheet-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+/* Título de cada entrada de "Qué es cada cosa": un encabezado (h4) con el aspecto de siempre. */
+.sheet-body li h4 {
+  font-family: var(--font-sans);
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
+}
+
+.sheet-body .num {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.sheet-body .mut {
+  color: var(--ink-soft);
+}
+
+/* ---------- Pantalla principal ---------- */
+.app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--w-aside) var(--drawer-now, 0px);
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+  min-height: var(--min-app);
+}
+
+.app[data-drawer='open'] {
+  --drawer-now: var(--w-drawer);
+}
+
+/* En Experimentos la columna derecha es más ancha: lleva la lección encima de los controles. */
+.app[data-modo='experimentos'] {
+  --w-aside: var(--w-aside-lab);
+}
+
+.top {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--s4);
+  padding: var(--s3) var(--s4) var(--s2) var(--gutter);
+}
+
+.left {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  padding: 0 var(--s4) var(--s4) var(--gutter);
+  min-height: 0;
+  min-width: 0;
+}
+
+.stage {
+  flex: 2 1 0;
+}
+
+.chartbox {
+  flex: 1 1 0;
+}
+
+.aside {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  margin: var(--s3) var(--gutter) var(--s4) 0;
+  padding: var(--s4);
+  background: var(--paper-sunken);
+  border: var(--hair) solid var(--line);
+  border-radius: var(--r-lg);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Play y Reiniciar quedan fijos arriba; lo demás se desplaza si no cabe (p. ej. en Experimentos). */
+.aside-scroll {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  /* Margen interno para que el anillo de foco y el contorno del resaltado no se recorten. */
+  padding: var(--s2);
+  margin: calc(-1 * var(--s2));
+}
+
+.actions {
+  flex: none;
+  display: flex;
+  gap: var(--s2);
+}
+
+.actions .play {
+  flex: 1;
+  min-width: 0;
+}
+
+.params {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.results {
+  margin-top: var(--s3);
+  padding-top: var(--s4);
+  border-top: var(--hair) solid var(--line);
+}
+
+.rlabel {
+  font: 600 var(--text-body) / 1.2 var(--font-sans);
+  color: var(--ink-soft);
+}
+
+.rsub {
+  font: 400 var(--text-small) / 1.3 var(--font-sans);
+  color: var(--ink-faint);
+}
+
+.rbig {
+  font: 600 var(--text-display) / 1.1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.rbig .unit {
+  font-size: var(--text-lead);
+}
+
+.rf {
+  margin-top: var(--s1);
+  font: 400 var(--text-body) / 1.3 var(--font-sans);
+  color: var(--ink-soft);
+}
+
+.rf b {
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.more {
+  margin-top: auto;
+  padding-top: var(--s3);
+}
+
+.more .btn {
+  width: 100%;
+}
+
+/* ---------- Experimentos ----------
+   La lección es un bloque con título y filetes neutros (la columna derecha ya es el panel, así que
+   no es una tarjeta dentro de otra). No hay cajón: lo que un paso pide mirar y vive en "Más
+   opciones" se muestra dentro de la lección. Toda la columna se desplaza por dentro si no cabe. */
+@media (min-width: 901px) {
+  .app[data-modo='experimentos'] .aside {
+    gap: var(--s2);
+    padding: var(--s3);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .app[data-modo='experimentos'] .aside-scroll {
+    flex: none;
+    overflow: visible;
+    gap: var(--s2);
+  }
+
+  .app[data-modo='experimentos'] .actions .play {
+    min-height: var(--control);
+    min-width: 0;
+    font-size: var(--text-body);
+  }
+
+  /* El resultado y el aviso del modelo van antes de los controles: así, aunque la columna se
+     desplace, lo que el paso pide mirar queda cerca de Play. */
+  .app[data-modo='experimentos'] .results {
+    order: 1;
+    margin-top: 0;
+    padding-top: var(--s2);
+  }
+
+  .app[data-modo='experimentos'] .status {
+    order: 2;
+  }
+
+  .app[data-modo='experimentos'] .params {
+    order: 3;
+    gap: var(--s2);
+  }
+
+  .app[data-modo='experimentos'] .plabel {
+    margin-bottom: 0;
+  }
+
+  /* T y f compactos: el valor grande a la derecha del nombre, para que la columna sea más corta. */
+  .app[data-modo='experimentos'] .rmain {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: var(--s3);
+  }
+
+  .app[data-modo='experimentos'] .rmain .rbig {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    font-size: var(--text-2);
+  }
+
+  .app[data-modo='experimentos'] .rmain .rlabel {
+    grid-column: 1;
+    align-self: end;
+  }
+
+  .app[data-modo='experimentos'] .rmain .rsub {
+    grid-column: 1;
+    align-self: start;
+  }
+}
+
+.lesson {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding-bottom: var(--s3);
+  border-bottom: var(--hair) solid var(--line-strong);
+}
+
+.lesson-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.lesson-name {
+  min-width: 0;
+  font: 600 var(--text-body) / 1.25 var(--font-serif);
+}
+
+.lesson-title {
+  font: 600 var(--text-lead) / 1.2 var(--font-serif);
+}
+
+/* Al llevar a la vista lo resaltado, que su contorno no quede pegado al borde. */
+.hl {
+  scroll-margin-block: var(--s3);
+}
+
+.lesson .btn:not(.icon-only) {
+  padding: 0 var(--s4);
+}
+
+.btn.icon-only {
+  flex: none;
+  width: var(--control);
+  padding: 0;
+}
+
+.ic-sm {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+/* Indicador de etapas: círculos numerados unidos por un filete. Hecha: marca. Actual: aro grueso y
+   nombre en negrita. Pendiente: solo el número. */
+.stages {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Filete que une los círculos, por detrás de ellos: del centro del primero al del último. */
+.stages::before {
+  content: '';
+  position: absolute;
+  top: calc((var(--dot) - var(--bold)) / 2);
+  left: calc(var(--dot) / 2);
+  right: calc(var(--dot) / 2);
+  height: var(--bold);
+  background: var(--line-strong);
+}
+
+/* Cada círculo con su nombre debajo; el primero y el último van a los bordes para que los
+   nombres nunca se pisen ni se salgan de la columna. */
+.stage-item {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s1);
+  text-align: center;
+  color: var(--ink-soft);
+  font: 400 var(--text-small) / 1.2 var(--font-sans);
+}
+
+.stage-item:first-child {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.stage-item:last-child {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.stage-dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--dot);
+  height: var(--dot);
+  border: var(--bold) solid var(--line-strong);
+  border-radius: var(--r-round);
+  background: var(--surface);
+  color: var(--ink);
+  font: 600 var(--text-small) / 1 var(--font-sans);
+}
+
+.stage-item[data-status='done'] .stage-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.stage-item[data-status='current'] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.stage-item[data-status='current'] .stage-dot {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  outline: var(--bold) solid var(--accent);
+  outline-offset: var(--s1);
+}
+
+/* Cada etapa (predicción, paso, pregunta, conclusión) separa sus bloques. */
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.instruction,
+.question {
+  font: 400 var(--text-body) / 1.4 var(--font-serif);
+}
+
+.lesson-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+
+.reason {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--ink-soft);
+  font: 400 var(--text-small) / 1.3 var(--font-sans);
+}
+
+/* Reserva su alto aunque esté vacía: así el aviso no mueve lo de abajo al aparecer. */
+.prepared {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  min-height: var(--s5);
+  color: var(--ok-text);
+  font: 600 var(--text-small) / 1.5 var(--font-sans);
+}
+
+.inline-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  /* Espacio para el contorno del resaltado, que no debe recortarse. */
+  padding: var(--s2);
+}
+
+.inline-items .param,
+.inline-items .curios > div {
+  padding: var(--s2) var(--s3);
+}
+
+/* Opciones de predicción y comprobación, y botones de la lista: grandes y con ícono. */
+.choices,
+.exp-list {
+  display: grid;
+  gap: var(--s2);
+}
+
+.opt,
+.exp-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  width: 100%;
+  min-height: var(--control);
+  padding: var(--s3) var(--s4);
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--hair) solid var(--line-strong);
+  border-radius: var(--r-md);
+  font: 400 var(--text-body) / 1.3 var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    transform var(--t-press) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .opt:hover,
+  .exp-item:hover {
+    background: var(--paper-sunken);
+  }
+}
+
+.opt[aria-checked='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 var(--hair) var(--accent);
+  font-weight: 600;
+}
+
+.opt[aria-checked='true'] .ic {
+  color: var(--accent);
+}
+
+.opt[data-verdict='correct'] {
+  background: var(--ok-bg);
+  border-color: var(--ok-line);
+  box-shadow: inset 0 0 0 var(--hair) var(--ok-line);
+  color: var(--ok-text);
+}
+
+.opt[data-verdict='correct'] .ic {
+  color: var(--ok-text);
+}
+
+.opt[data-verdict='wrong'] {
+  background: var(--warn-bg);
+  border-color: var(--warn-line);
+  box-shadow: inset 0 0 0 var(--hair) var(--warn-line);
+  color: var(--warn-text);
+}
+
+.opt[data-verdict='wrong'] .ic {
+  color: var(--warn-text);
+}
+
+/* Opciones no elegidas tras responder: siguen legibles, pero ya no se pueden elegir. */
+.opt[aria-disabled='true'] {
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .opt[aria-disabled='true']:hover {
+    background: var(--surface);
+    color: var(--ink-soft);
+    cursor: default;
+  }
+}
+
+/* La lista de experimentos son filas con filete, no tarjetas: la columna ya es el panel y una
+   caja dentro de otra caja pesaba de más (D6). La fila conserva los 44 px de alto del control. */
+.exp-list {
+  gap: 0;
+}
+
+.exp-item {
+  justify-content: space-between;
+  padding-inline: var(--s2);
+  background: transparent;
+  border: 0;
+  border-bottom: var(--hair) solid var(--line-strong);
+  border-radius: 0;
+}
+
+.exp-item:first-child {
+  border-top: var(--hair) solid var(--line-strong);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .exp-item:hover {
+    background: var(--surface);
+  }
+}
+
+.exp-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+}
+
+.exp-title {
+  font-weight: 600;
+}
+
+.exp-blurb {
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+  line-height: 1.3;
+}
+
+.feedback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  padding: var(--s3) var(--s4);
+  border: var(--hair) solid;
+  border-radius: var(--r-md);
+}
+
+.feedback[data-verdict='correct'] {
+  background: var(--ok-bg);
+  border-color: var(--ok-line);
+  color: var(--ok-text);
+}
+
+/* Una respuesta equivocada es un tono de aviso sereno, no de error. */
+.feedback[data-verdict='wrong'] {
+  background: var(--warn-bg);
+  border-color: var(--warn-line);
+  color: var(--warn-text);
+}
+
+.feedback-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font: 600 var(--text-body) / 1.3 var(--font-sans);
+}
+
+.feedback-text {
+  font: 400 var(--text-small) / 1.4 var(--font-serif);
+}
+
+.verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  border: var(--hair) solid;
+  border-radius: var(--r-md);
+  font: 600 var(--text-small) / 1.4 var(--font-sans);
+}
+
+.verdict .ic {
+  margin-top: var(--s1);
+}
+
+.verdict[data-tone='ok'] {
+  background: var(--ok-bg);
+  border-color: var(--ok-line);
+  color: var(--ok-text);
+}
+
+/* Predicción que no acertó: informativo, sin rojo. */
+.verdict[data-tone='info'] {
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+  color: var(--ink);
+}
+
+/* ---------- Ventanas medianas: columnas laterales más angostas ---------- */
+@media (max-width: 1100px) {
+  :root {
+    --w-drawer: 18rem;
+    --w-aside: 19rem;
+    --w-aside-lab: 21rem;
+  }
+
+  /* El cajón más angosto: las opciones segmentadas pierden aire para que quepan las cuatro. */
+  .seg {
+    min-width: 0;
+  }
+
+  .choice .seg span {
+    padding: 0 var(--s1);
+  }
+}
+
+/* ---------- Celular y tablet vertical: una sola columna ----------
+   Péndulo, gráfica, resultados y controles; Play y Reiniciar quedan fijos abajo y "Más opciones"
+   es una hoja inferior de la mitad del alto, con desplazamiento, para que el péndulo siga visible. */
+@media (max-width: 900px) {
+  :root {
+    --gutter: var(--s4);
+    /* Alto de la barra fija de Play y Reiniciar (el botón y el aire de arriba y abajo). */
+    --bar-h: calc(var(--play-h) + 2 * var(--s3));
+    /* Tope del alto de la lección pegada arriba durante los pasos. */
+    --lesson-max: 35dvh;
+  }
+
+  /* Lo que se lleva a la vista (foco, resaltado) no debe quedar bajo la barra fija de Play. */
+  html {
+    scroll-padding-bottom: calc(var(--bar-h) + var(--s3));
+  }
+
+  /* Durante los pasos la lección queda pegada arriba: el foco que llega con Shift+Tab no debe
+     quedar tapado por ella. La página se desplaza en el documento (html), así que va aquí. */
+  html:has(.lesson[data-phase='steps']) {
+    scroll-padding-top: calc(var(--lesson-max) + var(--s3));
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+  }
+
+  .top {
+    flex-wrap: wrap;
+    gap: var(--s2) var(--s3);
+    padding: var(--s3) var(--gutter) var(--s2);
+  }
+
+  .top h1 {
+    font-size: var(--text-title-m);
+    margin-right: auto;
+  }
+
+  .top .modes {
+    flex: 1 1 100%;
+  }
+
+  .top .modes .seg {
+    flex: 1;
+  }
+
+  .left,
+  .aside,
+  .aside-scroll {
+    display: contents;
+  }
+
+  .stage {
+    order: 1;
+    flex: none;
+    height: var(--pend-h);
+    margin: 0 var(--gutter);
+  }
+
+  .chartbox {
+    order: 2;
+    flex: none;
+    height: var(--chart-h);
+    margin: var(--s3) var(--gutter) 0;
+  }
+
+  .alert {
+    order: 3;
+    margin: var(--s3) var(--gutter) 0;
+  }
+
+  /* La lección va arriba del péndulo: cada parte suya es un elemento más de la columna. Durante los
+     pasos, el cuerpo (título, instrucción y botones) queda pegado arriba mientras el niño usa los
+     controles y mira los resultados, sin ocupar más de la mitad de la pantalla. */
+  .top {
+    order: -2;
+  }
+
+  .lesson {
+    display: contents;
+  }
+
+  .lesson-head,
+  .stages {
+    order: -1;
+    margin: var(--s2) var(--gutter) 0;
+  }
+
+  .lesson-body {
+    order: -1;
+    padding: var(--s3) var(--gutter);
+    border-bottom: var(--hair) solid var(--line);
+  }
+
+  .lesson[data-phase='steps'] .lesson-body {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    max-height: var(--lesson-max);
+    overflow-y: auto;
+    background: var(--paper);
+  }
+
+  /* Al llevar a la vista lo resaltado: que no quede bajo la lección pegada arriba ni bajo Play. */
+  .hl {
+    scroll-margin-top: calc(var(--lesson-max) + var(--s3));
+    scroll-margin-bottom: calc(var(--bar-h) + var(--s3));
+  }
+
+  .results {
+    order: 5;
+    margin: var(--s3) var(--gutter) 0;
+    padding: var(--s3) 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s3);
+  }
+
+  .rbig {
+    font-size: var(--text-2);
+  }
+
+  .rbig .unit {
+    font-size: var(--text-body);
+  }
+
+  .rf {
+    text-align: right;
+  }
+
+  /* Orden visual igual al del DOM (controles, aviso, Más opciones, Play): así Tab sigue lo que se ve. */
+  .params {
+    order: 6;
+    margin: var(--s3) var(--gutter) 0;
+    padding: var(--s4);
+    background: var(--paper-sunken);
+    border: var(--hair) solid var(--line);
+    border-radius: var(--r-lg);
+    gap: var(--s4);
+  }
+
+  .status {
+    order: 7;
+    margin: 0 var(--gutter);
+  }
+
+  .more {
+    order: 8;
+    margin: var(--s3) var(--gutter) 0;
+    padding-top: 0;
+  }
+
+  .actions {
+    order: 9;
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin-top: var(--s3);
+    padding: var(--s3) var(--gutter);
+    background: var(--paper);
+  }
+
+  .hint {
+    font-size: var(--text-body);
+    white-space: normal;
+    width: calc(100% - 2 * var(--s4));
+  }
+
+  .canvas-off {
+    padding: var(--s4);
+    gap: var(--s2);
+  }
+
+  .canvas-off-title {
+    font-size: var(--text-body);
+  }
+
+  .canvas-off-text {
+    font-size: var(--text-small);
+  }
+
+  .drawer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    /* Por encima de la barra de Play y Reiniciar, no encima: así siguen a la vista y se pueden pulsar. */
+    bottom: var(--bar-h);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(50dvh - var(--bar-h));
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: var(--shadow-pop);
+    /* Cerrado, se esconde por completo bajo la pantalla (no pasa por encima de la barra). */
+    transform: translateY(calc(100% + var(--bar-h)));
+  }
+
+  /* Cerrándose se desliza hacia abajo y solo al final deja de ser visible. Esta regla tiene que ir
+     con la misma especificidad que la de "cerrado" de escritorio, que si no le gana la transición. */
+  .app[data-drawer='closed'] .drawer {
+    transition:
+      transform var(--t-base) var(--ease),
+      visibility 0s var(--t-base);
+  }
+
+  .app[data-drawer='open'] .drawer {
+    transform: none;
+    visibility: visible;
+    transition: transform var(--t-base) var(--ease);
+  }
+
+  .drawer-in {
+    width: 100%;
+    height: auto;
+    max-height: calc(50dvh - var(--bar-h));
+  }
+
+  .drawer-head {
+    padding: var(--s3) var(--gutter);
+  }
+
+  .drawer-body {
+    padding: 0 var(--gutter) var(--s5);
+  }
+
+  .sheet {
+    inset: 0;
+    transform: none;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .sheet-head {
+    padding: var(--s3) var(--gutter);
+  }
+
+  .sheet-head h2 {
+    font-size: var(--text-3);
+  }
+
+  .sheet-body {
+    padding: var(--s2) var(--gutter) var(--s6);
+  }
+
+  .sheet-body .eq {
+    font-size: var(--text-body);
+  }
+}
+
+/* ---------- Modo "¿Qué es esto?" ----------
+   Un botón arriba enciende unas marcas (círculos con ? de 28 px y objetivo de 44 px) pegadas a cada
+   parte explicable; al tocar una se abre UNA tarjeta con su explicación. Apagado, la pantalla es la
+   de siempre: nada de esto se dibuja. Las marcas son un círculo claro con borde y ? azules: no se
+   parecen al resaltado de un paso del experimento (contorno y fondo azul claro del bloque entero),
+   así que ambos conviven; la marca queda dentro del bloque resaltado sin tapar nada. */
+
+/* Encendido: forma y fondo distintos (y el ícono lleno), no solo color. */
+.btn.sec[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 var(--hair) var(--accent);
+}
+
+.top .modes {
+  margin-left: auto;
+}
+
+/* Compacto: así, con el cajón abierto a 1366 px, el botón cabe en la misma fila que el título y los modos. */
+.top .explain-toggle {
+  flex: none;
+  padding: 0 var(--s3);
+  font-size: var(--text-small);
+}
+
+.explain-hint {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ink-soft);
+  font: 400 var(--text-small) / 1.3 var(--font-sans);
+}
+
+.explain-hint:empty {
+  display: none;
+}
+
+.mark {
+  flex: none;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--mark);
+  height: var(--mark);
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-round);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.mark-dot {
+  display: grid;
+  place-items: center;
+  width: var(--mark-ic);
+  height: var(--mark-ic);
+  border: var(--bold) solid var(--accent);
+  border-radius: var(--r-round);
+  background: var(--surface);
+  transition:
+    background-color var(--t-fast) var(--ease),
+    transform var(--t-press) var(--ease);
+}
+
+.mark-ic {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mark:hover .mark-dot {
+    background: var(--accent-soft);
+  }
+}
+
+/* Abierta: círculo lleno (además del color, la tarjeta a la vista y aria-expanded). */
+.mark[aria-expanded='true'] .mark-dot {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Las que cuelgan del dibujo van sobre su caja (posición en px calculada por las funciones de dibujo). */
+.mark-abs {
+  position: absolute;
+  z-index: 2;
+}
+
+/* "Presiona Play": con las marcas encendidas sube la leyenda de la gráfica, así que el aviso baja para no pisarla. */
+.app[data-explicar] .chartbox .hint {
+  top: auto;
+  bottom: var(--s7);
+  transform: translateX(-50%);
+}
+
+/* Cada parte de un grupo con su marca al lado: título, interruptor o botón y la marca. */
+.withmark {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  min-width: 0;
+}
+
+.withmark > h3,
+.withmark > .switch,
+.withmark > .btn {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Marca de un deslizador: arriba a la derecha de su bloque, donde la fila del nombre está vacía; sube
+   un poco para no tocar el valor, que queda más abajo. */
+.param {
+  position: relative;
+}
+
+.mark-param {
+  position: absolute;
+  top: calc(-1 * (var(--s3) + var(--bold)));
+  right: 0;
+}
+
+.app[data-explicar] .param .plabel {
+  padding-right: var(--mark);
+}
+
+/* Resultados: el período arriba a la derecha de su bloque; la frecuencia, a la derecha de su línea. */
+.rmain,
+.rf {
+  position: relative;
+}
+
+.rmain > .mark-result {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+/* El texto del período deja libre la esquina de su marca: si no cabe, baja de línea en vez de pisarla. */
+.app[data-explicar] .rmain {
+  padding-right: var(--mark);
+}
+
+/* La frecuencia es una fila con su marca al final (en la fila, no encima: así no toca nada de arriba ni de abajo). */
+.app[data-explicar] .rf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  min-height: var(--mark);
+}
+
+/* La primera marca de un deslizador sube hasta el hueco que deja Play y Reiniciar: se agranda ese hueco. */
+@media (min-width: 901px) {
+  .app[data-explicar] .params {
+    padding-top: var(--s2);
+  }
+}
+
+/* Datos para curiosos: una columna más, a la derecha del valor, para cada marca. */
+.app[data-explicar] .curios > div {
+  grid-template-columns: minmax(0, 1fr) auto var(--mark);
+}
+
+.app[data-explicar] .curios dd.d {
+  grid-column: 1 / 3;
+}
+
+.curios dd.m {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin: 0;
+}
+
+/* Play y Reiniciar: cada marca encima de su botón (una columna por botón). */
+.app[data-explicar] .actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  grid-auto-flow: column;
+  gap: 0 var(--s2);
+}
+
+.app[data-explicar] .actions .mark {
+  justify-self: center;
+}
+
+/* "Más opciones": la marca a la derecha del botón. */
+.app[data-explicar] .more {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.app[data-explicar] .more .btn {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+/* ---------- Tarjeta de explicación ---------- */
+.explain-card {
+  position: fixed;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  width: var(--w-card);
+  max-width: calc(100vw - 2 * var(--s2));
+  max-height: min(var(--h-card), calc(100dvh - 2 * var(--s2)));
+  background: var(--surface);
+  border: var(--hair) solid var(--line-strong);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-pop);
+  /* Nace desde su marca: ExplainCard fija el transform-origin (px) en el punto de la marca. */
+  transform-origin: 50% 0;
+  transition:
+    opacity var(--t-quick) var(--ease),
+    scale var(--t-quick) var(--ease);
+}
+
+/* Hoja inferior del celular: solo fundido. La página se desplaza según donde queda la hoja al
+   abrirse, y una subida o una escala movería esa medida. */
+.explain-card[data-sheet] {
+  transition-property: opacity;
+}
+
+.explain-head {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s3) var(--s3) var(--s2) var(--s4);
+}
+
+.explain-head h2 {
+  padding-top: var(--s2);
+  font: 600 var(--text-lead) / 1.25 var(--font-serif);
+}
+
+.explain-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  min-height: 0;
+  overflow: auto;
+  padding: 0 var(--s4) var(--s4);
+  /* Si el texto no cabe se desplaza por dentro: una sombra suave en el borde avisa que hay más
+     (las dos capas "local" la tapan cuando ya se llegó al principio o al final). Sin animación. */
+  background:
+    linear-gradient(var(--surface), var(--surface)) top / 100% var(--s5) local no-repeat,
+    linear-gradient(var(--surface), var(--surface)) bottom / 100% var(--s5) local no-repeat,
+    linear-gradient(var(--scroll-shade), transparent) top / 100% var(--s4) scroll no-repeat,
+    linear-gradient(transparent, var(--scroll-shade)) bottom / 100% var(--s4) scroll no-repeat;
+}
+
+.explain-block h3 {
+  margin-bottom: var(--s1);
+  color: var(--ink-soft);
+  font: 600 var(--text-small) / 1.3 var(--font-sans);
+}
+
+.explain-block p {
+  font: 400 var(--text-body) / 1.5 var(--font-serif);
+}
+
+/* Desplazable con teclado cuando el contenido no cabe: el anillo va por dentro para que no se recorte. */
+.explain-body:focus-visible {
+  outline-offset: calc(-1 * var(--ring));
+}
+
+/* Las marcas del borde de una caja (o de la ventana) no recortan su anillo: va por dentro de su objetivo. */
+.mark:focus-visible {
+  outline-offset: calc(-1 * var(--ring));
+}
+
+/* Palabras del glosario que aparecen en el texto de la tarjeta. */
+.explain-words {
+  padding-top: var(--s3);
+  border-top: var(--hair) solid var(--line);
+}
+
+.explain-words h3 {
+  margin: 0 0 var(--s2);
+  color: var(--ink-soft);
+  font: 600 var(--text-small) / 1.3 var(--font-sans);
+}
+
+/* Lista de definiciones (tarjeta y hoja de Teoría): la palabra en negrita y su explicación debajo. */
+.glossary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.glossary dt {
+  font: 600 var(--text-small) / 1.3 var(--font-sans);
+  color: var(--ink);
+}
+
+.glossary dd {
+  margin: var(--s1) 0 0;
+  color: var(--ink-soft);
+  font: 400 var(--text-small) / 1.5 var(--font-serif);
+}
+
+.sheet-body .glossary {
+  gap: var(--s4);
+}
+
+.sheet-body .glossary dt {
+  font-size: var(--text-body);
+}
+
+.sheet-body .glossary dd {
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+@media (min-width: 901px) {
+  /* En Experimentos el período va a la derecha del nombre: su marca ocupa una columna más. */
+  .app[data-modo='experimentos'][data-explicar] .rmain {
+    grid-template-columns: minmax(0, 1fr) auto var(--mark);
+    padding-right: 0;
+  }
+
+  .app[data-modo='experimentos'] .rmain > .mark-result {
+    position: static;
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}
+
+@media (max-width: 900px) {
+  /* La barra fija de Play y Reiniciar crece lo que mide una marca. */
+  .app[data-explicar] {
+    --bar-h: calc(var(--play-h) + var(--mark) + 2 * var(--s3));
+  }
+
+  /* La leyenda de la gráfica ocupa una fila de marca por curva: la caja crece lo mismo para que las curvas conserven su alto. */
+  .app[data-explicar] .chartbox {
+    height: calc(var(--chart-h) + 2 * var(--mark));
+  }
+
+  /* El aviso va bajo los modos, en una fila propia. */
+  .explain-hint {
+    order: 2;
+    flex: 1 1 100%;
+  }
+
+
+  /* Va justo antes de la barra de Play (order 9): así la barra, que es pegajosa, sigue pegada abajo al desplazarse. */
+  .sheet-spacer {
+    order: 8;
+    flex: none;
+    height: var(--sheet-max);
+  }
+
+  /* Hoja inferior: ocupa el ancho y se apoya sobre la barra de Play y Reiniciar. */
+  .explain-card {
+    left: 0;
+    right: 0;
+    /* La barra de Play y Reiniciar mide una marca más mientras el modo está encendido (la tarjeta solo existe entonces). */
+    bottom: calc(var(--bar-h) + var(--mark));
+    width: auto;
+    max-width: none;
+    max-height: var(--sheet-max);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+  }
+
+  /* Si la marca vive en el cajón "Más opciones" (que ocupa la mitad de abajo), la hoja va arriba:
+     abajo taparía la marca que se está explicando. */
+  .explain-card[data-edge='top'] {
+    top: 0;
+    bottom: auto;
+    max-height: calc(50dvh - var(--s2));
+    border-radius: 0 0 var(--r-lg) var(--r-lg);
+  }
+}
+
+/* Pantallas bajas (celular horizontal, zoom de 400 %): la barra de Play deja de ser fija, porque
+   ocuparía casi todo el alto, y la hoja se apoya al borde de abajo sin salirse por arriba. */
+@media (max-width: 900px) and (max-height: 520px) {
+  .actions {
+    position: static;
+  }
+
+  .explain-card {
+    bottom: 0;
+    max-height: min(var(--sheet-max), calc(100dvh - var(--s2)));
+  }
+
+  .explain-card[data-edge='top'] {
+    top: 0;
+    bottom: auto;
+    max-height: min(var(--sheet-max), calc(100dvh - var(--s2)));
+  }
+}
+
+/* ---------- Movimiento (fase D5) ----------
+   Reglas: solo transform y opacity (el color de fondo en los botones), curvas y tiempos de
+   tokens.css, nada de transition: all, y todo interrumpible (transiciones, no keyframes).
+   Frecuencia manda: aquí van las cosas ocasionales (hoja de Teoría, tarjeta, avisos, comprobación,
+   cambio de etapa); Play, Pausa, los deslizadores, el foco y el dibujo no se animan. Nada se mueve
+   al cargar la página: lo que entra lo hace cuando el niño lo provoca.
+   Las entradas usan @starting-style: el elemento nace en ese estado y la transición lo lleva a su
+   estado normal. Esas reglas van después de las de cada elemento para ganar a igual especificidad. */
+
+/* Entran con un fundido corto y una subida mínima. Solo aparecen cuando algo cambia (el aviso del
+   modelo no se repite al mover el deslizador: es el mismo elemento, solo cambia su texto). */
+.mark {
+  transition: opacity var(--t-fast) var(--ease);
+}
+
+.notice,
+.feedback,
+.prepared-msg {
+  transition:
+    opacity var(--t-base) var(--ease),
+    translate var(--t-base) var(--ease);
+}
+
+.prepared-msg {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+/* Cambio de etapa o de paso de la lección: el contenido nuevo aparece con un fundido, sin
+   desplazamientos (el foco ya está en el título y no debe moverse nada bajo él). */
+.lesson-body > .step,
+.lesson-body > .exp-list {
+  transition: opacity var(--t-quick) var(--ease);
+}
+
+@starting-style {
+  .mark {
+    opacity: 0;
+  }
+
+  .notice {
+    opacity: 0;
+    translate: 0 var(--lift-sm);
+  }
+
+  .feedback {
+    opacity: 0;
+    translate: 0 var(--lift-md);
+  }
+
+  .prepared-msg {
+    opacity: 0;
+    translate: 0 var(--lift-sm);
+  }
+
+  .lesson-body > .step,
+  .lesson-body > .exp-list {
+    opacity: 0;
+  }
+
+  .scrim {
+    opacity: 0;
+  }
+
+  .sheet {
+    opacity: 0;
+    translate: 0 var(--lift-lg);
+  }
+
+  .explain-card {
+    opacity: 0;
+    scale: var(--pop-from);
+  }
+}
+
+/* Pulsación: una escala mínima y rapidísima en los botones táctiles. Play no la lleva (se usa
+   mucho y con teclado: ya cambia de color al pulsarlo) ni los botones bloqueados. */
+@media (prefers-reduced-motion: no-preference) {
+  .btn:not(.play, [aria-disabled='true']):active,
+  .seg input:active + span,
+  .chip:active,
+  .opt:not([aria-disabled='true']):active,
+  .exp-item:active,
+  .switch:active .swtrack,
+  .mark:active .mark-dot {
+    transform: scale(var(--press));
+  }
+}
+
+/* "Reducir movimiento": más suave, no cero. Se quitan los desplazamientos y las escalas (aquí y,
+   en tokens.css, se acortan los tiempos); los fundidos de opacidad y los cambios de color se
+   conservan porque ayudan a entender que algo cambió. */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .seg span,
+  .chip,
+  .opt,
+  .exp-item,
+  .swtrack,
+  .swknob,
+  .mark-dot {
+    transition-property: background-color;
+  }
+
+  .sheet,
+  .notice,
+  .feedback,
+  .prepared-msg,
+  .explain-card {
+    transition-property: opacity;
+  }
+
+  .sheet[data-state='closing'] {
+    translate: none;
+  }
+}
+
+/* Cajón del celular con "reducir movimiento": en vez de deslizarse desde abajo, aparece y se va con
+   un fundido. */
+@media (prefers-reduced-motion: reduce) and (max-width: 900px) {
+  .app .drawer {
+    transform: none;
+    opacity: 0;
+  }
+
+  .app[data-drawer='closed'] .drawer {
+    transition:
+      opacity var(--t-fast) var(--ease),
+      visibility 0s var(--t-fast);
+  }
+
+  .app[data-drawer='open'] .drawer {
+    opacity: 1;
+    transition: opacity var(--t-fast) var(--ease);
+  }
+}
+
+/* Pantalla de último recurso (AppErrorBoundary): solo tokens, legible sin el resto de la interfaz. */
+.app-error {
+  max-width: 36rem;
+  margin: var(--s8) auto 0;
+  padding: var(--s5) var(--s6);
+  background: var(--surface);
+  border: var(--bold) solid var(--line-strong);
+  border-radius: var(--r-lg);
+  color: var(--ink);
+}
+.app-error h1 {
+  margin: 0 0 var(--s3);
+  font: 600 var(--text-3) / 1.25 var(--font-serif);
+}
+.app-error p {
+  margin: 0 0 var(--s4);
+  font-size: var(--text-body);
+}
+
+/* ---------- Colores forzados (modo de alto contraste de Windows y similares) ----------
+   El sistema cambia los colores y quita fondos y sombras: lo que distinguía un estado elegido (el
+   fondo azul, la sombra interior) desaparece. Aquí cada estado elegido se pinta con los colores de
+   selección del sistema (Highlight / HighlightText), que el usuario ya eligió para verse bien. */
+@media (forced-colors: active) {
+  .seg input:checked + span,
+  .modes .seg input:checked + span,
+  .chip[aria-pressed='true'],
+  .btn.sec[aria-pressed='true'],
+  .btn.sec[aria-expanded='true'],
+  .opt[aria-checked='true'],
+  .switch[aria-pressed='true'] .swtrack,
+  .stage-item[data-status='done'] .stage-dot,
+  .stage-item[data-status='current'] .stage-dot,
+  .mark[aria-expanded='true'] .mark-dot {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+    border-color: ButtonText;
+  }
+
+  /* El pomo del interruptor: visible sobre la pista apagada y sobre la encendida. */
+  .swknob {
+    forced-color-adjust: none;
+    background: ButtonText;
+  }
+
+  .switch[aria-pressed='true'] .swknob {
+    background: HighlightText;
+  }
+
+  /* El icono de una opción elegida hereda el color de selección. */
+  .opt[aria-checked='true'] .ic {
+    color: HighlightText;
+  }
+
+  /* La etapa actual lleva además su aro (outline), así que se distingue de la hecha y de la pendiente. */
+  .stage-item[data-status='current'] .stage-dot {
+    outline-color: Highlight;
+  }
+
+  /* Abierta o cerrada, la marca sigue siendo un círculo con borde. */
+  .mark-dot {
+    border-color: ButtonText;
+  }
+}
