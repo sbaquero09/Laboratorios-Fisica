@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import { injectCsp } from './src/security/csp';
 import { headersFileFromHtml } from './src/security/headers';
 
+// Carpeta de salida del build; se actualiza con la ruta real en configResolved.
 let salida = 'dist';
 
 export default defineConfig({
